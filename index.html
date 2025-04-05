@@ -334,7 +334,7 @@ print("RMSE,",RMSE)
 prediction = LR_model.transform(Assemebled_df)
 print(prediction.show())`;
 
-var text10 = `
+	var text10 = `
 from pyspark.sql import SparkSession
 from pyspark.ml.clustering import KMeans
 from pyspark.ml.feature import VectorAssembler
@@ -357,7 +357,7 @@ for center in model.clusterCenters():
  print(center)
 `;
 
-var text11 = `
+	var text11 = `
 from pyspark.sql import SparkSession
 from pyspark.ml.classification import LogisticRegression
 from pyspark.ml.feature import CountVectorizer,IDF,Tokenizer
@@ -383,7 +383,7 @@ lr_model = LR.fit(df)
 prediction = lr_model.transform(df)
 prediction.show()`;
 
-var text12 = `
+	var text12 = `
 from pyspark.sql import SparkSession
 from pyspark.ml.classification import LogisticRegression
 from pyspark.ml.feature import CountVectorizer,IDF,Tokenizer
@@ -413,7 +413,7 @@ lr_model = LR.fit(df)
 prediction = lr_model.transform(df)
 prediction.show()`;
 
-var text13 = `
+	var text13 = `
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import Tokenizer, HashingTF, StringIndexer
 from pyspark.ml.classification import NaiveBayes
@@ -481,7 +481,7 @@ print(f"Test set accuracy: {accuracy}")
 # Stop the SparkSession once done.
 spark.stop()`;
 
-var text14 = `
+	var text14 = `
 #word count
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import split,explode,col
