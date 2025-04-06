@@ -1,509 +1,767 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Copy Text Buttons</title>
-    <style>
-        button {
-            margin: 5px;
-        }
-
-        body {
-            /* background-color: #1F1D36; */
-            background-image: url("https://raw.githubusercontent.com/hel0118/sukuna/main/jujutsu-kaisen-sukuna-uhdpaper.com-4K-7.3063.jpg");
-            background-size: 100% auto;
-            /* Center the background image */
-            font-family: Arial, sans-serif;
-            text-align: center;
-            transition: 1s ease-in-out;
-        }
-
-        @media only screen and (max-width: 600px) {
-
-            /* Adjust properties for screens with a maximum width of 600px (adjust as needed) */
-            body {
-                background-image: url("https://raw.githubusercontent.com/hel0118/sukuna/main/real_esrgan_Zoro.jpg");
-                background-size: 135%;
-                /* Auto size for smaller screens */
-                background-position: top;
-                /* Center the background image, crop from top */
-            }
-        }
-
-
-        button {
-            color: #ccc;
-            margin: 10px;
-            padding: 10px;
-            font-size: 16px;
-            background-color: #dddddd00;
-            /* Light gray button background */
-            border: 1px solid #aaa;
-            /* Dark gray border */
-            cursor: pointer;
-            transition: 500ms ease-in-out;
-        }
-
-        button:hover {
-            color: darkslategrey;
-            background-color: #ccc;
-            /* Slightly darker background on hover */
-        }
-    </style>
+  <title>csv</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    button {
+      margin: 10px 0;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #d3d3d3;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+    button:hover {
+      background-color: #bcbcbc;
+    }
+    textarea {
+      position: absolute;
+      left: -9999px;
+    }
+  </style>
 </head>
-
 <body>
 
-    <button onclick="copyText(text1)">To read and display data using PySpark(prc2)</button>
-    <button onclick="copyText(text2)">combining Dataframes(prc3A)</button>
-    <button onclick="copyText(text3)">Joins(prc3B)</button>
-    <button onclick="copyText(text4)">Performing data operations(prc4)</button>
-    <button onclick="copyText(text5)">Creating a spark session using the configuration and Data frame creation(prc5A)</button>
-    <button onclick="copyText(text6)"> User Defined Function Using PySpark(prc5B)</button>
-    <button onclick="copyText(text7)">Creating a temporary view of the data frame(prc6)</button>
-    <button onclick="copyText(text8)">User defined function with spark session(prc7)</button>
-    <button onclick="copyText(text9)">PySpark using MLlib library working with linear regression(prc8)</button>
-    <button onclick="copyText(text10)">PySpark using MLlib library working with kmeans(prc9)</button>
-    <button onclick="copyText(text11)">PySpark using MLlib library working with logistic regression(prc10)</button>
-    <button onclick="copyText(text12)">PySpark using Mlib library working with Naive Bayes(prc11)</button>
-    <button onclick="copyText(text13)"> Real-Time Word Count with PySpark Streaming(prc12)</button>
-    <button onclick="copyText(text14)">Word Count(prc13)</button>
-    <p id="copiedMsg"></p>
-    <script>
-        var text1 = `
-
-from pyspark.sql import SparkSession
-spark = SparkSession.builder.appName('read data eg').getOrCreate()
-df = spark.read.option("Header",True).csv('Employee.csv')
-df.show()
-df.show(5)
-df.printSchema()
-df.select("Age").show()
-df.select("Age").show(3)
-df.filter(df["Age"]>30).show()
-pandas_df = df.toPandas()
-print(pandas_df.head())
-print(pandas_df.tail())
-spark.stop()`;
-        var text2 = `
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import col
-
-spark = SparkSession.builder.appName('Combined DataFrame').getOrCreate()
-
-data1 = [(1,"rohan",50),(2,"sumai",21),(3,"sachin",5)]
-data2 = [(4,"ajay",22),(5,"selvester",25),(6,"praveen",24)]
-
-column = ["ID","Name","Age"]
-
-df1 = spark.createDataFrame(data1,column)
-df2 = spark.createDataFrame(data2,column)
-
-df1.show()
-df2.show()`;
-        var text3 = `
-Combined_df = df1.union(df2)
-Combined_df.show()
-df3=df2.select("ID","Name","Age")
-Combined_df.show()
-
-# Using joins [merging dataframe on a column]
-
-data4 = [(1,"Mumbai"),(2,"Bangalore"),(3,"Delhi"),(4,"Amritsar"),(5,"Kolkata"),(6,"Chennai")]
-
-column2 = ["ID","City"]
-
-df4 = spark.createDataFrame(data4,column2)
-df4.show()
-join_df = df1.join(df4,on="ID",how="inner")
-join_df.show()
-
-# Using WITHCOLUMN to add a column
-df1 = df1.withColumn("Country",col("Name"))
-df1.show()
-from pyspark.sql import SparkSession
-spark = SparkSession.builder.appName('read data eg').getOrCreate()
-df1 = spark.read.option("Header",True).csv('dept_name.csv')
-df1.show()
-from pyspark.sql import SparkSession
-spark = SparkSession.builder.appName('read data eg').getOrCreate()
-df2 = spark.read.option("Header",True).csv('dept.csv')
-df2.show()
-df_merge=df1.join(df2,on="dept_id",how="inner")
-df_merge.show()`;
-
-        var text4 = `
-from pyspark.sql import  SparkSession
-from pyspark.sql.functions import col
-spark = SparkSession.builder.appName('read data eg').getOrCreate()
-data = [(1,"Laptop",1000,"Electronics"),
-        (2,"Shoes",50,"Fashion"),
-        (3, "Shirt", 25, "Fashion"),
-        (4, "Headphones", 150, "Electronics"),
-        (5, "Pants", 40, "Fashion")]
-column = ["prod_id","product","price","category"]
-df = spark.createDataFrame(data,column)
-df.show()
-collected_data=df.collect()
-for row in collected_data :
-  print(row)
-  df.filter(df["price"]>100).show()
-
-  #Sales Data Analysis : Map reduce
-  from pyspark.sql import SparkSession
-
-# Initialize Spark Session
-spark = SparkSession.builder.appName("SalesTotal").getOrCreate()
-sc = spark.sparkContext  # Get the SparkContext
 
-# Sample sales data (Product, Price)
-sales_data = [
-    ("Laptop", 1000),
-    ("Mobile", 500),
-    ("Laptop", 1200),
-    ("Tablet", 700),
-    ("Mobile", 450),
-    ("Tablet", 650),
-    ("Laptop", 1100),
-    ("Mobile", 520),
-]
 
-# Create an RDD
-rdd = sc.parallelize(sales_data)
-
-# Map Step: Convert each entry to (Product, Price)
-mapped_rdd = rdd.map(lambda x: (x[0], x[1]))
-
-# Reduce Step: Sum up sales for each product
-total_sales_rdd = mapped_rdd.reduceByKey(lambda a, b: a + b)
-
-print("**********************************")
-print("Sales Data Analysis : Map reduce")
-print("**********************************")
-
-# Collect and print results
-result = total_sales_rdd.collect()
-for product, total in result:
-    print(f"{product}: ${total}")
-
-# Stop Spark session
-spark.stop()
-`;
-
-        var text5 = `
-from pyspark.sql import SparkSession
-
-spark = SparkSession.builder.appName('SparkSession example').config('Spark Config','config - value').getOrCreate()
-
-from pyspark.sql import Row
-data = [Row(Name='ajit',Age=24),Row(Name='rinku',Age=30),Row(Name='chetan',Age=35)]
-
-df = spark.createDataFrame(data)
-
-df.show()
-
-df.printSchema()
-spark.stop()`;
-
-        var text6 = `
-from pyspark.sql import SparkSession
-
-spark = SparkSession.builder.appName('User input wala practical').config('Spark Config','config - value').getOrCreate()
-
-num_rows = int(input("Enter number of rows"))
-data = []
-for i in range (num_rows):
-  name=input("Enter Name - ")
-  age = int(input("Enter Age - "))
-  city = input("Enter City - ")
-  data.append((name,age,city))
-column = ["Name","Age","city"]
-df=spark.createDataFrame(data,schema=column)
-
-df.show()
-
-df.printSchema()
-print("Original Data")
-df.select("Name","Age").show()
-
-print("Age Filter")
-df.filter(df['Age']>21).show()
-
-print("Location Filter")
-df.filter(df['City']=="Mumbai").show()`;
-
-        var text7 = `
-from pyspark.sql import SparkSession
-
-spark = SparkSession.builder.appName("DataFrameExample").getOrCreate()
-
-df = spark.createDataFrame([(1, 22), (2, 23), (3, 24)], ["id", "age"])
-df.show()
-
-df.createOrReplaceTempView("people")
-
-
-result = spark.sql("SELECT * FROM people WHERE age > 22").show()
-
-result
-
-#B
-
-from pyspark.sql import SparkSession
-data  = [(1,'electronics',1000,'2024-01-01'),(2,'fashion',50,'2024-01-02'),(3,'cosmetics',500,'2024-01-03'),(4,'novels',1500,'2025-04-04')]
-columns = ['id','category','price','date']
-spark = SparkSession.builder.appName('ecommerce').getOrCreate()
-df = spark.createDataFrame(data,columns)
-df.show()
-df.createOrReplaceTempView("sales")
-
-result = spark.sql("SELECT category,avg(price) as avg_amount FROM sales group by category").show()
-result = spark.sql("SELECT * from sales order by price desc limit 2").show()
-result = spark.sql("SELECT * from sales order by price asc limit 2").show()
-
-#C - Datavizualization
-
-import matplotlib.pyplot as plt
-import pandas as pd
-import seaborn as sns
-
-
-result = spark.sql("SELECT category,avg(price) as avg_amount FROM sales group by category")
-df_query1 = result.toPandas()
-df_query1.head()
-
-#Convert the DataFrames to Pandas
-plt.figure(figsize=(8, 6))
-sns.barplot(x='category', y='avg_amount', data=df_query1)
-plt.title('n\nCategories by Price')
-plt.xlabel('Category')
-plt.ylabel('Price')
-plt.show()`;
-
-        var text8 = `
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import udf
-from pyspark.sql.types import StringType
-
-spark =  SparkSession.builder.appName("udf examle").getOrCreate()
-
-data = [("kevin",65),("cook",15),("rohit",45),]
-columns = ["Name","Age"]
-df  = spark.createDataFrame(data,columns)
-df.show()
-def age_group(age):
-  if age < 18:
-    return "Minor"
-  elif age >= 18 and age < 60:
-    return "Adult"
-  else:
-    return "Senior"
-age_group_udf = udf(age_group,StringType())
-
-df_with_group = df.withColumn("Age_Group",age_group_udf(df["Age"]))
-df_with_group.show()
-age_count = df_with_group.groupBy("Age_Group").count()
-age_count.show()`;
-
-        var text9 = `
-from pyspark.sql import SparkSession
-from pyspark.ml.regression import LinearRegression
-from pyspark.ml.feature import VectorAssembler
-
-spark.stop()
-spark =  SparkSession.builder.appName("udf examle").getOrCreate()
-
-data =[(1,100),(2,110),(3,120),(4,130),(5,105)]
-
-columns=["Feature","Target"]
-df  = spark.createDataFrame(data,columns)
-
-df.show()
-Assembler = VectorAssembler(inputCols=["Feature"],outputCol="Features")
-Assemebled_df = Assembler.transform(df).select("Features","Target")
-Assemebled_df.show()
-LR = LinearRegression(featuresCol="Features",labelCol="Target")
-LR_model = LR.fit(Assemebled_df)
-print(LR_model.coefficients)
-print(LR_model.intercept)
-training_summary = LR_model.summary
-RMSE = training_summary.rootMeanSquaredError
-print("RMSE,",RMSE)
-prediction = LR_model.transform(Assemebled_df)
-print(prediction.show())`;
-
-	var text10 = `
-from pyspark.sql import SparkSession
-from pyspark.ml.clustering import KMeans
-from pyspark.ml.feature import VectorAssembler
-
-spark = SparkSession.builder.appName("KMeans").getOrCreate()
-
-data = [(1.0,2.0),(1.5,1.8),(5.0,8.0),(8.0,8.0),(1.0,0.6),(9.0,11.0)]
-columns = ['Sub1','Sub2']
-df = spark.createDataFrame(data,columns)
-df.show()
-assembler = VectorAssembler(inputCols=['Sub1','Sub2'],outputCol='features')
-assembler1=assembler.transform(df)
-assembler1.show()
-Kmeans = KMeans(k=2,seed=1)
-model = Kmeans.fit(assembler1)
-
-prediction = model.transform(assembler1)
-prediction.show()
-for center in model.clusterCenters():
- print(center)
-`;
-
-	var text11 = `
-from pyspark.sql import SparkSession
-from pyspark.ml.classification import LogisticRegression
-from pyspark.ml.feature import CountVectorizer,IDF,Tokenizer
-spark = SparkSession.builder.appName("Logistic Regresion").getOrCreate()
-#sample email data
-data = [ (1,"win a free iphone") ,(1,"congratulation you won a lottery"),
- (0,"lets meet for lunch"),(0,"don't forget to complete the assignment")]
-columns = ['label','text']
-df = spark.createDataFrame(data,columns)
-df.show()
-tokenizer = Tokenizer(inputCol='text',outputCol='tokens')
-df = tokenizer.transform(df)
-df.show()
-vectorizer = CountVectorizer(inputCol='tokens',outputCol='rawfeature')
-vector_model = vectorizer.fit(df)
-df = vector_model.transform(df)
-df.show()
-
-df = df.select('label','rawfeature')
-df = df.withColumnRenamed("rawfeature","features1")
-LR = LogisticRegression(featuresCol='features1',labelCol='label')
-lr_model = LR.fit(df)
-prediction = lr_model.transform(df)
-prediction.show()`;
-
-	var text12 = `
-from pyspark.sql import SparkSession
-from pyspark.ml.classification import LogisticRegression
-from pyspark.ml.feature import CountVectorizer,IDF,Tokenizer
-
-spark = SparkSession.builder.appName("Logistic Regresion").getOrCreate()
-
-#sample email data
-data = [ (1,"win a free iphone") ,(1,"congratulation you won a lottery"),
- (0,"lets meet for lunch"),(0,"don't forget to complete the assignment")]
-
-columns = ['label','text']
-df = spark.createDataFrame(data,columns)
-df.show()
-tokenizer = Tokenizer(inputCol='text',outputCol='tokens')
-df = tokenizer.transform(df)
-df.show()
-vectorizer = CountVectorizer(inputCol='tokens',outputCol='rawfeature')
-vector_model = vectorizer.fit(df)
-df = vector_model.transform(df)
-df.show()
-df = df.select('label','rawfeature') # Change 'features1' to 'rawfeature'
-df = df.withColumnRenamed("rawfeature","features1") # Rename the column to 'features1' if necessary for Logistic Regression
-
-LR = LogisticRegression(featuresCol='features1',labelCol='label') # LR is used as the variable for LogisticRegression
-lr_model = LR.fit(df)
-
-prediction = lr_model.transform(df)
-prediction.show()`;
-
-	var text13 = `
-from pyspark.sql import SparkSession
-from pyspark.ml.feature import Tokenizer, HashingTF, StringIndexer
-from pyspark.ml.classification import NaiveBayes
-from pyspark.ml import Pipeline
-from pyspark.ml.evaluation import MulticlassClassificationEvaluator
-
-
-
-# Initialize SparkSession.
-# When running on a Hadoop cluster, SparkSession will automatically connect to your Hadoop/HDFS environment.
-spark = SparkSession.builder \
-    .appName("NaiveBayesInPySpark") \
-    .getOrCreate()
-
-# -------------------------------------------------------------------------------
-# If your data resides in HDFS, uncomment and modify the following line:
-# df = spark.read.format("csv").option("header", "true").load("hdfs:///path/to/your/data.csv")
-# -------------------------------------------------------------------------------
-
-# For demonstration, we create a small sample dataset.
-data = [
-    (0, "spark is great and fast", "positive"),
-    (1, "hadoop is reliable but slow", "negative"),
-    (2, "spark and hadoop are big data technologies", "positive"),
-    (3, "I dislike hadoop performance", "negative"),
-    (4, "spark offers ease of development", "positive"),
-    (5, "I am frustrated by hadoop complexities", "negative")
-]
-columns = ["id", "text", "label"]
-df = spark.createDataFrame(data, columns)
-
-# Convert string labels to numeric indices using StringIndexer.
-labelIndexer = StringIndexer(inputCol="label", outputCol="indexedLabel")
-
-# Tokenize the text column: this splits sentences into words.
-tokenizer = Tokenizer(inputCol="text", outputCol="words")
-
-# Convert tokens to feature vectors using HashingTF.
-hashingTF = HashingTF(inputCol="words", outputCol="features", numFeatures=1000)
-
-# Create the Naive Bayes classifier.
-# "multinomial" modelType is typically used for text classification.
-nb = NaiveBayes(labelCol="indexedLabel", featuresCol="features", modelType="multinomial")
-
-# Build the Pipeline that chains the preprocessing and model stages.
-pipeline = Pipeline(stages=[labelIndexer, tokenizer, hashingTF, nb])
-
-# Split the dataset into training and testing sets.
-(trainingData, testData) = df.randomSplit([0.7, 0.3], seed=1234)
-
-# Train the model using the pipeline.
-model = pipeline.fit(trainingData)
-
-# Use the trained model to make predictions on the test data.
-predictions = model.transform(testData)
-predictions.select("id", "text", "label", "indexedLabel", "prediction").show()
-
-# Evaluate the accuracy of the model.
-evaluator = MulticlassClassificationEvaluator(
-    labelCol="indexedLabel", predictionCol="prediction", metricName="accuracy"
+<!-- Buttons + Textareas -->
+
+<!-- 1 -->
+<button onclick="copyCode('code1')">1A Data Pre-Processing and Exploration</button>
+<textarea id="code1" readonly>
+    import pandas as pd
+    df=pd.read_csv("/content/SampleData.csv")
+    print(df)
+    print(df.info())
+    print(df["Name"])
+    print(df["Name"].isnull())
+    print(df["Name"])
+    df.fillna("null",inplace=True)
+    print(df["Name"])
+    df["Name"]=df["Name"].str.replace("null","Shipra")
+    print(df["Name"])
+    df["Name"]=df["Name"].str.lower()
+    print(df["Name"])
+    df["Name"]=df["Name"].str.upper()
+    print(df["Name"])
+    df['Name']=df['Name'].str.strip()
+    print(df['Name'])
+    import pandas as pd
+    df={'Value':[10,26,80,34,27,27,19,38,28]}
+    df=pd.DataFrame(df)
+    print(df)
+    
+    Q1=df['Value'].quantile(0.25)
+    Q3=df['Value'].quantile(0.75)
+    IQR=Q3-Q1
+    
+    lower_bound=Q1-1.5*IQR
+    upper_bound=Q3+1.5*IQR
+    
+    outliers=df[(df['Value']<lower_bound) | (df['Value']>upper_bound)]
+    print("Outliers:\n",outliers)
+    
+</textarea>
+
+<!-- 2 -->
+<button onclick="copyCode('code2')">1B Load a Dataset, Calculate Descriptive Summary Statistics, Create Visualizations</button>
+<textarea id="code2" readonly>
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    df.hist()
+    plt.show()
+    
+    df.plot.bar()
+    plt.bar(df['Age'], df['Pclass'])
+    plt.xlabel("Age")
+    plt.ylabel("Pclass")
+    plt.title("Name")
+    plt.show()
+    
+    plt.scatter(df['Pclass'], df['Age'])
+    plt.xlabel("Pclass")
+    plt.ylabel("Age")
+    plt.title("Name")
+    plt.show()
+    
+    
+    sns.boxplot(x='Pclass', y='Age', data=df)
+    plt.xlabel("Pclass")
+    plt.ylabel("Age")
+    plt.title("Name")
+    plt.show()
+</textarea>
+
+<!-- 3 -->
+<button onclick="copyCode('code3')">1C Label Encoding,Scaling and Binarization</button>
+<textarea id="code3" readonly>
+    import numpy as np
+    import pandas as pd
+    df=pd.read_csv("/content/iris.csv")
+    print(df['species'].unique)
+    from sklearn import preprocessing
+    le=preprocessing.LabelEncoder()
+    df['species']=le.fit_transform(df['species'])
+    print(df['species'].unique())
+    
+    from sklearn.datasets import load_iris
+    from sklearn.preprocessing import Binarizer
+    data = load_iris(as_frame=True)
+    df = data.frame
+    print(df['sepal length (cm)'])
+    binarizer = Binarizer(threshold=5)
+    df['sepal length (cm) binary'] = binarizer.fit_transform(df[['sepal length (cm)']])
+    print(df['sepal length (cm) binary'])
+</textarea>
+
+<!-- 4 -->
+<button onclick="copyCode('code4')">2A Implementation of Decision Tree Learning using Information Gain</button>
+<textarea id="code4" readonly>
+    # Libraries Required
+    import numpy as np
+    import pandas as pd
+    
+    data=pd.read_csv("/content/iris.csv")
+    data.head()
+    y = data['species']
+    
+    print("Features")
+    print(x)
+    
+    print("Target")
+    print(y)
+    
+    from sklearn.model_selection import train_test_split
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+    
+    print("Training Data")
+    print(x_train)
+    print(y_train)
+    
+    print("Testing Data")
+    print(x_test)
+    print(y_test)
+    from sklearn.tree import DecisionTreeClassifier
+    model = DecisionTreeClassifier()
+    model.fit(x_train, y_train)
+    y_pred = model.predict(x_test)
+    print(y_pred)
+    from sklearn.metrics import accuracy_score
+    accuracy = accuracy_score(y_test, y_pred)
+    print("Accuracy:", accuracy)
+    import matplotlib.pyplot as plt
+    from sklearn.tree import plot_tree
+    
+    plt.figure(figsize=(10, 6))
+    plot_tree(model, feature_names=x.columns, class_names=model.classes_, filled=True, rounded=True)
+    plt.title("Name")
+    plt.show()
+</textarea>
+
+<!-- 5 -->
+<button onclick="copyCode('code5')">2B Implementation of Decision Tree Learning using Gini Index</button>
+<textarea id="code5" readonly>
+    import matplotlib.pyplot as plt
+    from sklearn.datasets import load_iris
+    from sklearn.tree import DecisionTreeClassifier, export_text, plot_tree
+    data = load_iris()
+    
+    x = data.data
+    y = data.target
+    
+    print("x : \n", x)
+    print("y : \n", y)
+    model = DecisionTreeClassifier(criterion='gini', random_state=42)
+    model.fit(x, y)
+    test_data = [[6.1,3.4,9,1.8]]
+    
+    prediction = model.predict(test_data)
+    print("Prediction : \n", prediction)
+    tree_rules = export_text(model, feature_names=data.feature_names)
+    print(tree_rules)
+    plt.figure(figsize=(12, 8))
+    plot_tree(model, filled=True, feature_names=data.feature_names, class_names=data.target_names)
+    plt.title("Name")
+    plt.show()
+</textarea>
+
+<!-- 6 -->
+<button onclick="copyCode('code6')">2C Implementation of Gini Index in Python</button>
+<textarea id="code6" readonly>
+    parent_node=[50,30,20]
+    child_1=[30,20,10]
+    child_2=[20,10,10]
+    
+    print("Parent Node4 : ",parent_node)
+    print("Child Node1 : ",child_1)
+    print("Child Node2 : ",child_2)
+    def gini_index(classes):
+      total = sum(classes)
+      gini = 1
+      for c in classes:
+        gini -= (c/total)**2
+      return gini
+    
+    gini_parent = gini_index(parent_node)
+    print("Parent Gini Index : \n", gini_parent)
+    def weighted_gini(children):
+      total=sum([sum(child) for child in children])
+      weighted_gini=0
+      for child in children:
+        weighted_gini+=(sum(child)/total)*gini_index(child)
+      return weighted_gini
+    
+    gini_split=weighted_gini([child_1, child_2])
+    print("Split Gini Index : \n", gini_split)
+    
+    def gini_gain (parent, children):
+      gini_parent = gini_index(parent)
+      gini_split = weighted_gini (children)
+      return gini_parent- gini_split
+    
+    gain = gini_gain (parent_node, [child_1, child_2])
+    print("Gini_Gain: \n", gain)
+</textarea>
+
+<!-- 7 -->
+<button onclick="copyCode('code7')">2D Implementation of Decision Tree using Information Gain</button>
+<textarea id="code7" readonly>
+    from sklearn.datasets import load_iris
+    from sklearn.tree import DecisionTreeClassifier, export_text, plot_tree
+    import matplotlib.pyplot as plt
+    data = load_iris()
+    X = data.data  
+    y = data.target  
+    clf = DecisionTreeClassifier(criterion='entropy', max_depth=4, random_state=42)
+    clf.fit(X, y)
+    plt.figure(figsize=(12, 8))
+    plot_tree(
+        clf,
+        feature_names=data.feature_names,
+        class_names=data.target_names,
+        filled=True,
+        rounded=True
+    )
+    plt.title("name")
+    plt.show()
+      tree_rules = export_text(clf, feature_names=data.feature_names)
+      print(tree_rules)
+</textarea>
+
+<!-- 8 -->
+<button onclick="copyCode('code8')">2E Implementation of Information Gain</button>
+<textarea id="code8" readonly>
+    import numpy as np
+    def entropy(classes):
+        total = sum(classes)
+        proportions = [count / total for count in classes if count > 0]
+        return -sum(p * np.log2(p) for p in proportions)
+    
+    def information_gain(parent, children):
+        total_instances = sum(parent)
+        parent_entropy = entropy(parent)
+        weighted_entropy = sum(
+            (sum(child) / total_instances) * entropy(child) for child in children
+        )
+        return parent_entropy - weighted_entropy
+    
+      # Dataset
+    parent_node = [50, 30, 20]  # Class A: 50, Class B: 30, Class C: 20
+    child_1 = [30, 20, 10]      # Class A: 30, Class B: 20, Class C: 10
+    child_2 = [20, 10, 10]      # Class A: 20, Class B: 10, Class C: 10
+    print("Parent Node: ",parent_node)
+    print("Child Node1: ",child_1)
+    print("Child Node2: ",child_2)
+    
+    # Calculations
+    parent_entropy = entropy(parent_node)
+    weighted_entropy = sum([entropy(child_1), entropy(child_2)])
+    gain = information_gain(parent_node, [child_1, child_2])
+    
+    # Results
+    print("************************************")
+    print(f"Entropy (Parent Node): {parent_entropy:.4f}")
+    print(f"Weighted Entropy (After Split): {weighted_entropy:.4f}")
+    print(f"Information Gain: {gain:.4f}")
+</textarea>
+
+<!-- 9 -->
+<button onclick="copyCode('code9')">3A Implementation of naiveBayes classfier(spam vs ham)</button>
+<textarea id="code9" readonly>
+    import numpy as np
+    from sklearn.naive_bayes import BernoulliNB
+    from sklearn.model_selection import train_test_split
+    from sklearn.metrics import accuracy_score
+    
+    X = np.array([
+        [1,1,1,0,0],
+        [1,1,0,0,0],
+        [1,0,0,0,0],
+        [0,0,0,0,0],
+        [0,0,1,1,1],
+        [0,0,1,1,1]
+    ])
+    
+    Y = np.array([1,1,1,0,0,0])
+    
+    X_train , X_test , Y_train , Y_test = train_test_split(X,Y,test_size=0.2,random_state=42)
+    
+    model = BernoulliNB()
+    model.fit(X_train,Y_train)
+    
+    Y_pred = model.predict(X_test)
+    
+    accuracy = accuracy_score(Y_test,Y_pred)
+    print(f"Accuracy: { accuracy * 100:.2f}%")
+    
+    # When we use testing data as [0, 0, 0, 1, 1]
+    new_email = np.array([[0,0,0,1,1]])
+    prediction = model.predict(new_email)
+    print("When we use testing data as [0, 0, 0, 1, 1]")
+    print("Predicted class for the new email (0 = Ham , 1 = Spam):",prediction)
+</textarea>
+
+  <!-- 10 -->
+<button onclick="copyCode('code10')">3B Implementation of naiveBayes classfier(iris dataset)</button>
+<textarea id="code10" readonly>
+    from sklearn.datasets import load_iris
+
+    iris = load_iris()
+    X = iris.data
+    y = iris.target
+    from sklearn.model_selection import train_test_split
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    from sklearn.naive_bayes import GaussianNB
+    from sklearn.metrics import accuracy_score
+    
+    model = GaussianNB()
+    model.fit(X_train, y_train)
+    
+    y_pred = model.predict(X_test)
+    print("Predicted Output \n" , y_pred)
+    
+    accuracy = accuracy_score(y_test, y_pred)
+    print(f"Accuracy: { accuracy * 100:.2f}%")
+</textarea>
+
+<!-- 11 -->
+<button onclick="copyCode('code11')">4A Reading data from different files using R</button>
+<textarea id="code11" readonly>
+    library(datasets)
+    data(iris)
+    print(iris)
+    names(iris)
+    summary(iris)
+    summary(iris$Sepal.Width)
+    is.na(iris$Sepal.Width)
+    is.na(iris)
+    length(unique(iris$Sepal.Width))
+    plot(iris$Sepal.Width)
+    plot(iris)
+    plot(iris$Petal.Width,iris$Petal.Length)
+</textarea>
+
+<!-- 12 -->
+<button onclick="copyCode('code12')">4B Implementing Classification in R (Decision Tree)</button>
+<textarea id="code12" readonly>
+    install.packages("party")
+    library(party) # Load package party
+    
+    library (datasets) # load datasets package
+    data (iris) # load dataset
+    print(iris)
+    
+    target = Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width
+    
+    cdt <- ctree(target, iris) #Build tree
+    
+    table(predict(cdt), iris$Species) # Create confusion matrix
+    cdt #To display decision tree rulesplot(cdt, type=”simple”) #Plotting of decision tree
+    
+    plot(cdt, type="simple", main = "Decision Tree") 
+    library(party)
+    indexes = sample(150,99)
+    iris_train = iris[indexes,]
+    iris_test = iris[-indexes,]
+    target = Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width
+    cdt <- ctree(target, iris_train)
+    table(predict(cdt, newdata = iris_test), iris_test$Species)
+    plot(cdt, type="simple", main = "R")
+</textarea>
+
+<!-- 13 -->
+<button onclick="copyCode('code13')">4C Implement Classification in R(Naive Bayes)</button>
+<textarea id="code13" readonly>
+    library('e1071')
+    data<-read.csv("/content/weather-nominal-weka.csv")
+    print(data)
+    weather_df=as.data.frame(data)
+    weather_df
+    Naive_Bayes_Model=naiveBayes(play ~.,data=weather_df )
+    print(Naive_Bayes_Model)
+    NB_Predictions = predict(Naive_Bayes_Model,weather_df)
+    table(NB_Predictions, weather_df$play, dnn=c("Prediction", "Actual"))
+    import pandas as pd
+    data = {'Size (sq ft)': [750, 800, 850, 900, 950, 1000, 1100, 1200],
+    'Price (USD)': [150000, 160000, 165000, 175000, 180000, 190000, 205000, 220000]}
+    df = pd. DataFrame(data)
+    print ("Jasar Shaikh33")
+    print ("Dataset :")
+    print(df)
+</textarea>
+
+<!-- 14 -->
+<button onclick="copyCode('code14')">5A  Implementing Classification in Python (SVM)</button>
+<textarea id="code14" readonly>
+
+    import pandas as pd
+    data = {
+        'feature1': [5.1,4.9,6.2,5.9],
+        'feature2': [3.5,3.0,3.4,3.0],
+        'feature3': [1.4,1.4,5.4,5.1],
+        'target': [0,0,2,1]
+    }
+    df = pd.DataFrame(data)
+    print(df)
+    feature_columns = ['feature1','feature2','feature3']
+    target_column = 'target'
+    
+    x = df[feature_columns]  #features
+    y = df[target_column]    # target
+    print("Features_Columns")
+    print(x)
+    print("Target_Columns")
+    print(y)
+    from sklearn.model_selection import train_test_split
+    x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.2,random_state=42)
+    
+    print("Training Data")
+    print(x_train)
+    print(y_train)
+    print("Testing Data")
+    print(x_test)
+    print(y_test)
+    
+    from sklearn.svm import SVC
+    svm = SVC(kernel='linear', C=1.0)
+    #Train the Classifier
+    svm.fit(x_train,y_train)
+    print("Model is Trained")
+    y_pred = svm.predict(x_test)
+    print("Predicted Values")
+    print(y_pred)
+    
+    y_pred = svm.predict(x_test)
+    print("Predicted Values")
+    print(y_pred)
+    from sklearn.metrics import classification_report, accuracy_score
+    accuracy = accuracy_score(y_test,y_pred)
+    print("Accuracy of the Model")
+    print(accuracy)
+    print("Classification Report")
+    print(classification_report(y_test,y_pred))
+    
+    from sklearn.metrics import classification_report, accuracy_score
+    accuracy = accuracy_score(y_test,y_pred)
+    print("Accuracy of the Model")
+    print(accuracy)
+    print("Classification Report")
+    print(classification_report(y_test,y_pred))
+    import matplotlib.pyplot as plt
+    from sklearn.metrics import confusion_matrix
+    
+    plt.figure(figsize=(8,6))
+    plt.scatter(df['feature1'],df['feature2'], c=df['target'], cmap='viridis', edgecolor='k')
+    plt.xlabel('Feature1')
+    plt.ylabel('Feature2')
+    plt.title('\n\nNAME \n\nScatter Plot of Features')
+</textarea>
+
+<!-- 15 -->
+<button onclick="copyCode('code15')">5B Implementing Classification in R language (SVM)</button>
+<textarea id="code15" readonly>
+    library(e1071)
+library(caret)
+
+data<-data.frame(
+  feature1=c(5.1,4.9,6.2,5.9),
+  feature2=c(3.5,3.0,3.4,3.0),
+  feature3=c(1.4,1.4,5.4,5.1),
+  target=as.factor(c(0,0,2,1))
 )
-accuracy = evaluator.evaluate(predictions)
-print(f"Test set accuracy: {accuracy}")
 
-# Stop the SparkSession once done.
-spark.stop()`;
+set.seed(42)
+trainIndex<-createDataPartition(data$target, p = 0.5, list = FALSE)
+trainData<-data[trainIndex,]
+testData<-data[-trainIndex,]
 
-	var text14 = `
-#word count
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import split,explode,col
-spark = SparkSession.builder.appName("Word Count").getOrCreate()
-# load the sample text
-data = [("Name",),("roll",),("message",)]
-df = spark.createDataFrame(data,["text"])
-df.show()
-word_df = df.withColumn("words",explode(split(col("text")," ")))
-word_df.show()
-word_count = word_df.groupBy("words").count().orderBy(col("count").desc())
-word_count.show()`;
+# Train an SVM model
+svm_model <- svm(target ~., data = trainData,kernel = "linear",cost = 1)
 
-        function copyText(text) {
-            navigator.clipboard.writeText(text).then(function () {
-                document.getElementById('copiedMsg').innerHTML = "Text Copied"
-            }).catch(function (err) {
-                console.error('Unable to copy text', err);
-            });
-        }
-    </script>
+predictions <- predict(svm_model, testData)
 
+conf_matrix <- confusionMatrix(predictions, testData$target)
+print("Confusion Matrix:")
+print(conf_matrix)
+
+accuracy <- conf_matrix$overall['Accuracy']
+cat("\nAccuracy", accuracy,"/n")
+</textarea>
+
+<!--16-->
+<button onclick="copyCode('code16')">6A Implementation of K-Means Clustering using Python</button>
+<textarea id="code16" readonly>
+    x = [14, 5, 10, 4, 3, 11, 14 , 6, 10, 12]  # Define x as a list using square brackets []
+    y = [21, 19, 24, 17, 16, 25, 24, 22, 21, 21]
+    print("Unlabel Data")
+    print ("X =")
+    print (x)
+    print("Y =")
+    print (y)
+    import matplotlib.pyplot as plt
+    plt. scatter (x, y)
+    plt.title('\n\nNAME \n\nROLL NO')
+    plt. show()
+    data = list(zip(x, y))
+    print("Coordinates :")
+    print(data) 
+    from sklearn.cluster import KMeans
+    kmeans = KMeans (n_clusters=2)
+    kmeans. fit(data)
+    plt. scatter (x, y, c=kmeans. labels_)
+    plt. title("\n\nNAME \n\nK-Means with 2 Clusters")
+    plt. show()
+    
+    from sklearn.cluster import KMeans
+    kmeans = KMeans (n_clusters=3)
+    kmeans. fit(data)
+    plt. scatter (x, y, c=kmeans. labels_)
+    plt. title("\n\nNAME \n\nK-Means with 3 Clusters")
+    plt. show()
+</textarea>
+<!--17-->
+<button onclick="copyCode('code17')">6B Implementation of K-Means Clustering using R language</button>
+<textarea id="code17" readonly>
+    install.packages("ggplot2")
+install.packages("datasets")
+# Load necessary libraries
+library(ggplot2)
+library(datasets)
+
+# Load dataset and remove categorical column
+data(iris)
+df <- iris[, 1:4]
+
+# Determine the optimal number of clusters (Elbow Method)
+set.seed(123)
+wcss <- vector()
+for (k in 1:10) {
+  wcss[k] <- sum(kmeans(df, centers = k, nstart = 10)$tot.withinss)
+}
+plot(1:10, wcss, type = "b", pch = 19, col = "blue",
+     xlab = "Number of Clusters", ylab = "WCSS",
+     main = "Elbow Method for Finding Optimal K")
+
+# Apply K-means clustering with K=3
+set.seed(123)
+kmeans_result <- kmeans(df, centers = 3, nstart = 25)
+
+# Perform PCA for visualization
+pca_result <- prcomp(df, scale. = TRUE)
+df_pca <- data.frame(pca_result$x[, 1:2], Cluster = as.factor(kmeans_result$cluster))
+
+# Plot the clusters
+ggplot(df_pca, aes(x = PC1, y = PC2, color = Cluster)) +
+  geom_point(size = 3) +
+  labs(title = "\n\n NAME - ROLL NO \n\nK-means Clustering (PCA Reduced Data)")
+
+
+</textarea>
+
+<!--18-->
+<button onclick="copyCode('code18')">7 Understanding Weka</button>
+<textarea id="code18" readonly>
+  Part A: Working with Explorer in Weka
+  Step 1: Launch Weka
+  Open Weka GUI Chooser.
+  From the available options, select Explorer.
+  Step 2: Load Dataset
+  In the Explorer window, go to the Preprocess tab.
+  Click Open file… and select FishersIrisDataset.csv.
+  Step 3: Verify Dataset Attributes
+  Weka will load:
+  6 attributes.
+  150 instances (rows).
+  To clean the data:
+  Remove the instance number attribute (as it is not useful for analysis).
+  Do this by clicking the checkbox next to it in the Attributes list.
+  Step 4: Explore Data (Optional)
+  To view a histogram for any attribute:
+  Click on the attribute (e.g., Petal width).
+  A histogram will show the distribution across species.
+  Part B: Using ARFF Viewer
+  Step 5: Open ARFF Viewer
+  From the Weka GUI Chooser, click on Tools.
+  Select ArffViewer.
+  Step 6: Load the Dataset in ARFF Viewer
+  In ArffViewer:
+  Click File → Open.
+  Select the dataset (e.g., iris.arff or any converted .arff file).
+  Part C: Visualizing Data
+  Step 7: Visualize Dataset
+  In the Weka GUI Chooser, select Visualization.
+  Then click on Plot to view different attribute relationships in the dataset.
+</textarea>
+
+<!--19-->
+<button onclick="copyCode('code19')">8 Implementing Classification in Weka (Decision Tree)</button>
+<textarea id="code19" readonly>
+  Step 1: Load Dataset
+Open Weka Explorer.
+Go to the Preprocess tab.
+Click Open file and load the dataset (e.g., Iris dataset).
+Step 2: Select the J48 Algorithm
+Switch to the Classify tab.
+Click Choose → follow the path:
+classifiers → trees → J48
+After selecting J48, click Close to return to the Classify tab.
+Step 3: Configure J48 Settings
+Click on J48 to open the Weka Generic Object Editor.
+Change the setting:
+Set saveInstanceData = true (this helps track how each instance is classified).
+Optionally, click More to explore additional options.
+Step 4: Set Test Options
+In the Classify tab, under Test options:
+Choose Percentage split.
+Set the value to 66%:
+This means:
+99 records used for training.
+51 records used for testing (from a total of 150 in Iris dataset).
+Step 5: Run the J48 Classifier
+Click Start to begin the classification process.
+Results will be displayed in the Classifier output box.
+Step 6: Visualize the Decision Tree
+In the Result list, find the latest run.
+Right-click on it → select Visualize tree.
+The decision tree structure will be displayed.
+
+</textarea>
+
+<!--20-->
+<button onclick="copyCode('code20')">9 Implementing Classification in Weka (Naïve Bayes)</button>
+<textarea id="code20" readonly>
+  Part A: Training the Classifier
+  Step 1: Load Dataset
+  Open Weka Explorer.
+  Go to the Preprocess tab.
+  Click Open file and select weather.nominal.arff.
+  Step 2: Select Naïve Bayes Classifier
+  Go to the Classify tab.
+  Choose NaiveBayes from the classifier list.
+  Click on More Options to configure Classifier Evaluation Options.
+  Select Use training set for evaluation.
+  Step 3: Run the Classifier
+  Click on the Start button.
+  Weka will process the data and display the results.
+  Step 4: Analyze the Results
+  Observe:
+  Correctly classified instances (e.g., 13)
+  Incorrect instances (e.g., 1 — shown with a (+) sign in the error column)
+  Accuracy (e.g., 92.8571%)
+  Weka also automatically applies Laplace Estimation (evident in the modified counts).
+  
+  Part B: Creating and Using a Test Dataset
+  Step 1: Open ARFF File for Editing
+  Go to Tools → Select ArffViewer.
+  In ArffViewer:
+  Click File → Open and select weather.nominal.arff.
+  Step 2: Prepare Test Data
+  Select all records except one, to use that one as a test instance.
+  (Or leave out the first n records if you want n test instances).
+  Optionally, modify the values of the row(s) for testing.
+  Save the modified file as test.arff.
+  Step 3: Load Test Set in Weka
+  In Weka's Classify tab:
+  Select Supplied test set.
+  Click on Set and choose the test.arff file.
+  File details (attributes, number of instances) will be displayed.
+  Step 4: Run the Classifier on Test Data
+  Click Start to apply Naïve Bayes on the test set.
+  Observe the prediction result — e.g., Play: Yes for the unknown instance.
+</textarea>
+
+<!--21-->
+<button onclick="copyCode('code21')">10 Implementing Clustering with Weka</button>
+<textarea id="code21" readonly>
+  Step 1: Understanding the Data
+If the data is unlabeled (i.e., no class/category is assigned), we can use clustering to group similar items.
+
+Clustering groups similar instances based on their features into clusters.
+
+Step 2: Choose the Dataset
+Use Fisher’s Iris dataset, which contains flower samples with attributes like:
+Sepal length
+Sepal width
+Petal length
+Petal width
+Species (class label — to be ignored for clustering)
+
+Step 3: Load the Dataset in Weka
+Open Weka GUI.
+Load the Iris dataset.
+
+Step 4: Prepare Data for Clustering
+Since clustering is for unlabeled data, we must ignore the class label:
+Use "Ignore Attributes" option.
+In the "Select items" dialog box, choose the Species attribute (the class label).
+
+Step 5: Apply K-Means Clustering
+Go to the "Cluster" tab.
+Choose SimpleKMeans from the list.
+Click on "SimpleKMeans" to open configuration:
+Set number of clusters = 3 (since there are 3 species).
+Make other required changes (if any).
+Click OK.
+Click on Start to run the clustering.
+
+Step 6: Analyze the Output
+Weka displays:
+Cluster centroids
+Standard deviations
+Number of instances in each cluster (e.g., 61, 50, and 39).
+
+Step 7: Evaluate Clustering Results
+Choose "Classes to clusters evaluation" in the Cluster mode.
+Re-run the clustering algorithm.
+Weka will now compare actual class labels with predicted clusters.
+You can check how well the clusters match the true species.
+
+Step 8: Visualize the Clusters
+Use Weka's visualization tools:
+Set X-axis = Petal length
+Set Y-axis = Petal width
+Adjust Jitter to better view overlapping samples.
+This helps in understanding how well the clusters are formed visually.
+</textarea>
+
+<script>
+function copyCode(id) {
+  var textarea = document.getElementById(id);
+  textarea.select();
+  textarea.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  alert("Code copied to clipboard!");
+}
+</script>
+<a href="dept.csv" download>dept CSV File</a>
+<a href="employee.csv" download>employee CSV File</a>
+<a href="emp_data.csv" download>emp_data CSV File</a>
+  
 </body>
-
 </html>
